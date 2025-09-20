@@ -2,37 +2,83 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private PlayerInput input;
-    public float maxFallSpeed = 50f;
+    public PlayerData playerData;
+    public PlayerInput input;
+    public Rigidbody2D rb;
     public float moveDirectionVector = 1;
-    public float moveSpeed = 5;
-    public float jumpHeight;
-    public float isJumping;
-    public float isGrounded;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         input = GetComponent<PlayerInput>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void FixedUpdate()
     {
-        if (input.wasdInputVector.WasPressedThisFrame())
-        {
-            moveDirectionVector = input.wasdInputVector.ReadValue<Vector2>().x;
-            HandleFaceDirection();
-        }
-        if (input.jumpInput.ReadValue<float>() >= 1)
-            isJumping = 1;
+        if (playerData.isGrounded)
+            playerData.isJumping = false;
+            rb.gravityScale = playerData.defaultGravityScale;
     }
 
-    void HandleFaceDirection()
+    public void HandleMovement()
     {
-        Debug.Log(moveDirectionVector);
-        Vector3 vector3scale = this.transform.localScale;
-        this.transform.localScale = new Vector3(moveDirectionVector*Mathf.Abs(vector3scale.x), vector3scale.y, vector3scale.z);
+        HandleFaceDirection();
+        HandleJump();
 
+        if (input.wasdInputVector.WasReleasedThisFrame())
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
+        }
+        if (input.wasdInputVector.IsPressed())
+        {
+
+            // W+A = 0.707 x 
+            moveDirectionVector = Mathf.Round(input.wasdInputVector.ReadValue<Vector2>().x);
+            Debug.Log(moveDirectionVector);
+
+            if (input.wasdInputVector.ReadValue<Vector2>().y <= 0)
+                rb.linearVelocity = new Vector2(playerData.targetSpeed * moveDirectionVector, rb.linearVelocityY);
+        }
+        if (input.jumpInput.ReadValue<float>() >= 1)
+            playerData.isJumping = true;
+    }
+
+    public void HandleFaceDirection()
+    {
+        Vector3 vector3scale = this.transform.localScale;
+        if (Mathf.Abs(moveDirectionVector) >= 1)
+            this.transform.localScale = new Vector3(moveDirectionVector*Mathf.Abs(vector3scale.x), vector3scale.y, vector3scale.z);
+    }
+
+    public void HandleJump()
+    {
+        if (input.jumpInput.WasReleasedThisFrame() && !playerData.isGrounded)
+        {
+            float linearYtoSet = rb.linearVelocityY > 0 ? 0 : rb.linearVelocityY;
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, linearYtoSet);
+        }
+
+        if (rb.linearVelocityY <= 0)
+        {
+            rb.gravityScale = playerData.fallingGravityScale;
+        }
+
+        if (input.jumpInput.WasPressedThisFrame())
+        {
+            Debug.Log("JUmped");
+            if (playerData.isGrounded)
+            {
+                rb.AddForce(new Vector2(0, playerData.jumpForce), ForceMode2D.Impulse);
+                playerData.isJumping = true;
+                playerData.isGrounded = false;
+            }
+        }
+
+        // For capping max falling speeds
+        if (rb.linearVelocityY < 0)
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
+
+        // Extend air time slightly between threshold
+        if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
+            rb.gravityScale = playerData.jumpHangGravityScale;
     }
 }

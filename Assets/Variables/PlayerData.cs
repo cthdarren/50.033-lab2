@@ -1,0 +1,21 @@
+using System;
+using UnityEngine;
+
+[CreateAssetMenu]
+public class PlayerData: ScriptableObject
+{
+    public float targetSpeed;
+    public float maxSpeed;
+    public float jumpHangTimeThreshold;
+    public float jumpHangGravityScale;
+    public float fallingGravityScale;
+    public float defaultGravityScale;
+    public float jumpForce;
+    public float maxFallSpeed;
+    public float hp;
+    public float damage;
+    public bool isJumping;
+    public bool isGrounded;
+    public bool isInvincible;
+    public bool isMovementDisabled;
+}

@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Animator animator;
-    public Rigidbody2D rb;
     public PlayerMovement playerMovement;
     public PlayerInput playerInput;
     public void Start()
@@ -15,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
-        animator.SetFloat("Speed", Mathf.Abs(playerMovement.moveSpeed));
+        playerMovement.HandleMovement();
+        animator.SetFloat("Speed", Mathf.Abs(playerMovement.rb.linearVelocityX));
     }
 }
