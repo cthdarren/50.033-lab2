@@ -1,7 +1,10 @@
+using System.Collections;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Animator animator;
     public PlayerData playerData;
     public PlayerInput input;
     public Rigidbody2D rb;
@@ -14,15 +17,38 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (playerData.isGrounded)
+        if (rb.linearVelocityY <= 0)
+        {
+            rb.gravityScale = playerData.fallingGravityScale;
+        }
+
+        if (playerData.isDashing)
+        {
+            rb.gravityScale = 0;
+        }
+
+        if (playerData.isGrounded) { 
             playerData.isJumping = false;
-            rb.gravityScale = playerData.defaultGravityScale;
+            if (!playerData.isDashing)
+                rb.gravityScale = playerData.defaultGravityScale;
+        }
+
+        // For capping max falling speeds
+        if (rb.linearVelocityY < 0)
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
+
+        // Extend air time slightly between threshold
+        if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
+            rb.gravityScale = playerData.jumpHangGravityScale;
     }
 
     public void HandleMovement()
     {
+        if (playerData.isMovementDisabled) return;
+
         HandleFaceDirection();
         HandleJump();
+        HandleDash();
 
         if (input.wasdInputVector.WasReleasedThisFrame())
         {
@@ -33,7 +59,6 @@ public class PlayerMovement : MonoBehaviour
 
             // W+A = 0.707 x 
             moveDirectionVector = Mathf.Round(input.wasdInputVector.ReadValue<Vector2>().x);
-            Debug.Log(moveDirectionVector);
 
             if (input.wasdInputVector.ReadValue<Vector2>().y <= 0)
                 rb.linearVelocity = new Vector2(playerData.targetSpeed * moveDirectionVector, rb.linearVelocityY);
@@ -57,14 +82,8 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocityX, linearYtoSet);
         }
 
-        if (rb.linearVelocityY <= 0)
-        {
-            rb.gravityScale = playerData.fallingGravityScale;
-        }
-
         if (input.jumpInput.WasPressedThisFrame())
         {
-            Debug.Log("JUmped");
             if (playerData.isGrounded)
             {
                 rb.AddForce(new Vector2(0, playerData.jumpForce), ForceMode2D.Impulse);
@@ -73,12 +92,38 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        // For capping max falling speeds
-        if (rb.linearVelocityY < 0)
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
+    }
 
-        // Extend air time slightly between threshold
-        if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
-            rb.gravityScale = playerData.jumpHangGravityScale;
+    public void HandleDash()
+    {
+        if (playerData.isDashing) return;
+        if (playerData.dashCooldownTimer > 0) return;
+        if (input.dashInput.WasPressedThisFrame())
+        {
+            playerData.isMovementDisabled = true;
+            playerData.isDashing = true;
+            playerData.isInvincible = true;
+            playerData.dashCooldownTimer = playerData.dashCooldown;
+            animator.SetTrigger("Dash");
+            Debug.Log("Teleporting");
+            rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+    public void Dash()
+    {
+        rb.linearVelocity = moveDirectionVector * Vector2.right * playerData.dashForce;
+        StartCoroutine(StopTeleportDash());
+    }
+
+    public IEnumerator StopTeleportDash()
+    {
+        yield return new WaitForSeconds(playerData.dashDuration);
+        animator.SetTrigger("DashEnd");
+        Debug.Log("Teleported");
+        rb.linearVelocity = Vector2.zero;
+        playerData.isMovementDisabled = false;
+        playerData.isDashing = false;
+        playerData.isInvincible = false;
     }
 }

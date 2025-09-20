@@ -14,15 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   targetSpeed: 5
   maxSpeed: 0
-  jumpHangTimeThreshold: 0.1
+  jumpHangTimeThreshold: 0
   jumpHangGravityScale: 1
   fallingGravityScale: 5
   defaultGravityScale: 3
+  dashDuration: 0.2
+  dashDelay: 0
+  dashCooldown: 0.5
+  dashCooldownTimer: -0.9999989
+  dashForce: 50
   jumpForce: 15
-  maxFallSpeed: 500
+  maxFallSpeed: 50
   hp: 10
   damage: 1
   isJumping: 0
+  isDashing: 0
   isGrounded: 1
   isInvincible: 0
   isMovementDisabled: 0

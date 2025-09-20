@@ -12457,7 +12457,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 2, y: 3, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13079,7 +13079,7 @@ Transform:
   m_GameObject: {fileID: 1895536810}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.24, z: 0}
+  m_LocalPosition: {x: -2, y: 1, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13098,6 +13098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de8375187b47a648b6d9695ebea4f25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  animator: {fileID: 1895536811}
   playerData: {fileID: 11400000, guid: e006dd96b54a75445a014fb503d330f6, type: 2}
   input: {fileID: 1895536816}
   rb: {fileID: 1895536819}
@@ -13141,6 +13142,15 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  dashInput:
+    m_Name: Dash Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1a5d779a-7ca9-4018-8de9-eca8f64efbaf
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &1895536817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13156,6 +13166,7 @@ MonoBehaviour:
   animator: {fileID: 1895536811}
   playerMovement: {fileID: 1895536815}
   playerInput: {fileID: 1895536816}
+  playerData: {fileID: 11400000, guid: e006dd96b54a75445a014fb503d330f6, type: 2}
 --- !u!70 &1895536818
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
