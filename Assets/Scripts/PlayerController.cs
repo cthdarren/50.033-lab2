@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     public void Update()
     {
         playerMovement.HandleMovement();
-        animator.SetFloat("Speed", Mathf.Abs(playerMovement.rb.linearVelocityX));
     }
 
     public void FixedUpdate()

@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public PlayerInput input;
     public Rigidbody2D rb;
     public float moveDirectionVector = 1;
+    private bool isInStartDashAnimation;
 
     void Start()
     {
@@ -20,11 +21,18 @@ public class PlayerMovement : MonoBehaviour
         if (rb.linearVelocityY <= 0)
         {
             rb.gravityScale = playerData.fallingGravityScale;
+            // For capping max falling speeds
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
         }
 
         if (playerData.isDashing)
         {
             rb.gravityScale = 0;
+        }
+
+        if (isInStartDashAnimation)
+        {
+            rb.linearVelocity = Vector2.zero;
         }
 
         if (playerData.isGrounded) { 
@@ -33,13 +41,10 @@ public class PlayerMovement : MonoBehaviour
                 rb.gravityScale = playerData.defaultGravityScale;
         }
 
-        // For capping max falling speeds
-        if (rb.linearVelocityY < 0)
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
-
         // Extend air time slightly between threshold
         if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
             rb.gravityScale = playerData.jumpHangGravityScale;
+
     }
 
     public void HandleMovement()
@@ -106,12 +111,14 @@ public class PlayerMovement : MonoBehaviour
             playerData.dashCooldownTimer = playerData.dashCooldown;
             animator.SetTrigger("Dash");
             Debug.Log("Teleporting");
-            rb.linearVelocity = Vector2.zero;
+            
+            isInStartDashAnimation = true;
         }
     }
 
     public void Dash()
     {
+        isInStartDashAnimation = false;
         rb.linearVelocity = moveDirectionVector * Vector2.right * playerData.dashForce;
         StartCoroutine(StopTeleportDash());
     }
