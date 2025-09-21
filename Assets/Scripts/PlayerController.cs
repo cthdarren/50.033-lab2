@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     public PlayerMovement playerMovement;
+    public PlayerCombat playerCombat;
     public PlayerInput playerInput;
     public PlayerData playerData;
     public void Start()
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
+        playerCombat.HandleCombat();
         playerMovement.HandleMovement();
     }
 

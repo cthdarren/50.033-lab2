@@ -14,5 +14,4 @@ public class PlayerInput : MonoBehaviour
         jumpInput = InputSystem.actions.FindAction("Jump");
         dashInput = InputSystem.actions.FindAction("Sprint");
     }
-
 }
