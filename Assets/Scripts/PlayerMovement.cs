@@ -35,7 +35,8 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
         }
 
-        if (playerData.isGrounded) { 
+        if (playerData.isGrounded)
+        {
             playerData.isJumping = false;
             if (!playerData.isDashing)
                 rb.gravityScale = playerData.defaultGravityScale;
@@ -65,11 +66,19 @@ public class PlayerMovement : MonoBehaviour
             // W+A = 0.707 x 
             moveDirectionVector = Mathf.Round(input.wasdInputVector.ReadValue<Vector2>().x);
 
-            if (input.wasdInputVector.ReadValue<Vector2>().y <= 0)
-                rb.linearVelocity = new Vector2(playerData.targetSpeed * moveDirectionVector, rb.linearVelocityY);
+            //if (input.wasdInputVector.ReadValue<Vector2>().y <= 0)
+            rb.linearVelocity = new Vector2(playerData.targetSpeed * moveDirectionVector, rb.linearVelocityY);
         }
         if (input.jumpInput.ReadValue<float>() >= 1)
             playerData.isJumping = true;
+
+        HandleAnimations();
+    }
+    public void HandleAnimations()
+    {
+        animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocityX));
+        animator.SetFloat("VerticalSpeed", rb.linearVelocityY);
+        animator.SetBool("isGrounded", playerData.isGrounded);
     }
 
     public void HandleFaceDirection()
@@ -128,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(playerData.dashDuration);
         animator.SetTrigger("DashEnd");
         Debug.Log("Teleported");
-        rb.linearVelocity = Vector2.zero;
+        rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
         playerData.isMovementDisabled = false;
         playerData.isDashing = false;
         playerData.isInvincible = false;
