@@ -29,6 +29,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = 0;
         }
+        else
+        {
+            rb.gravityScale = playerData.defaultGravityScale;
+        }
 
         if (isInStartDashAnimation)
         {
@@ -38,8 +42,6 @@ public class PlayerMovement : MonoBehaviour
         if (playerData.isGrounded)
         {
             playerData.isJumping = false;
-            if (!playerData.isDashing)
-                rb.gravityScale = playerData.defaultGravityScale;
         }
 
         // Extend air time slightly between threshold
