@@ -18,36 +18,34 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (rb.linearVelocityY <= 0)
-        {
-            rb.gravityScale = playerData.fallingGravityScale;
-            // For capping max falling speeds
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
-        }
 
         if (playerData.isDashing)
         {
             rb.gravityScale = 0;
         }
-        else
+        else if (!playerData.isGrounded)
         {
+
+            if (rb.linearVelocityY <= 0)
+            {
+                rb.gravityScale = playerData.fallingGravityScale;
+                // For capping max falling speeds
+                rb.linearVelocity = new Vector2(rb.linearVelocityX, Mathf.Max(rb.linearVelocityY, -playerData.maxFallSpeed));
+            }
+        }
+        else if (playerData.isGrounded)
+        {
+            playerData.isJumping = false;
             rb.gravityScale = playerData.defaultGravityScale;
         }
+        // Extend air time slightly between threshold
+        else if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
+            rb.gravityScale = playerData.jumpHangGravityScale;
 
         if (isInStartDashAnimation)
         {
             rb.linearVelocity = Vector2.zero;
         }
-
-        if (playerData.isGrounded)
-        {
-            playerData.isJumping = false;
-        }
-
-        // Extend air time slightly between threshold
-        if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
-            rb.gravityScale = playerData.jumpHangGravityScale;
-
     }
 
     public void HandleMovement()
@@ -139,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(playerData.dashDuration);
         animator.SetTrigger("DashEnd");
         Debug.Log("Teleported");
-        rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
+        rb.linearVelocity = Vector2.zero; //new Vector2(0, rb.linearVelocityY);
         playerData.isMovementDisabled = false;
         playerData.isDashing = false;
         playerData.isInvincible = false;

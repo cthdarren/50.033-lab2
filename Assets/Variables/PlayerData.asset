@@ -16,12 +16,12 @@ MonoBehaviour:
   maxSpeed: 0
   jumpHangTimeThreshold: 0
   jumpHangGravityScale: 1
-  fallingGravityScale: 5
+  fallingGravityScale: 6
   defaultGravityScale: 3
-  dashDuration: 0.3
+  dashDuration: 0.2
   dashDelay: 0
-  dashCooldown: 0.5
-  dashCooldownTimer: -23.16034
+  dashCooldown: 0.9
+  dashCooldownTimer: -0.559999
   dashForce: 33
   jumpForce: 15
   maxFallSpeed: 50
