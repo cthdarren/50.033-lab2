@@ -48,6 +48,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            playerData.isJumping = false;
+            playerData.isGrounded = true;
+        }
+    }
+
+    public void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            playerData.isGrounded = false;
+        }
+    }
+
     public void HandleMovement()
     {
         if (playerData.isMovementDisabled) return;

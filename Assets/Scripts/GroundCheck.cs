@@ -7,13 +7,13 @@ public class GroundCheck : MonoBehaviour
 
     public void FixedUpdate()
     {
-        playerData.isGrounded = Physics2D.Raycast(
-            this.transform.position,
-            Vector2.down,
-            0.1f,
-            groundLayer
-        );
-        if (playerData.isJumping && playerData.isGrounded)
-            playerData.isJumping = false;
+        //playerData.isGrounded = Physics2D.Raycast(
+        //    this.transform.position,
+        //    Vector2.down,
+        //    0.1f,
+        //    groundLayer
+        //);
+        //if (playerData.isJumping && playerData.isGrounded)
+        //    playerData.isJumping = false;
     }
 }
