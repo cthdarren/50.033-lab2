@@ -55,11 +55,20 @@ public class PlayerMovement : MonoBehaviour
             playerData.isJumping = false;
             playerData.isGrounded = true;
         }
+        else if (collision.gameObject.CompareTag("Platform"))
+        {
+            playerData.isJumping = false;
+            playerData.isGrounded = true;
+        }
     }
 
     public void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
+        {
+            playerData.isGrounded = false;
+        }
+        else if (collision.gameObject.CompareTag("Platform"))
         {
             playerData.isGrounded = false;
         }
@@ -102,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 vector3scale = this.transform.localScale;
         if (Mathf.Abs(moveDirectionVector) >= 1)
-            this.transform.localScale = new Vector3(moveDirectionVector*Mathf.Abs(vector3scale.x), vector3scale.y, vector3scale.z);
+            this.transform.localScale = new Vector3(moveDirectionVector * Mathf.Abs(vector3scale.x), vector3scale.y, vector3scale.z);
     }
 
     public void HandleJump()
@@ -137,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
             playerData.dashCooldownTimer = playerData.dashCooldown;
             animator.SetTrigger("Dash");
             Debug.Log("Teleporting");
-            
+
             isInStartDashAnimation = true;
         }
     }
