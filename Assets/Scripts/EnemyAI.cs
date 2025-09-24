@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
     private float attackTimer;
     private bool isDead = false;
     private int attackStateHash;
+    private int idleStateHash;
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class EnemyAI : MonoBehaviour
         currentHealth = enemyData.health;
 
         attackStateHash = Animator.StringToHash("boss-attack");
+        idleStateHash = Animator.StringToHash("boss-idle");
 
         // Start in the Idle state
         currentState = AIState.Idle;
@@ -98,9 +100,14 @@ public class EnemyAI : MonoBehaviour
             attackTimer = enemyData.attackCooldown;
         }
 
-        if (Vector2.Distance(transform.position, playerTransform.position) > enemyData.attackRange)
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.shortNameHash == idleStateHash)
         {
-            currentState = AIState.Chasing;
+            if (Vector2.Distance(transform.position, playerTransform.position) > enemyData.attackRange)
+            {
+                currentState = AIState.Chasing;
+            }
         }
     }
 
