@@ -17,6 +17,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (playerData.isInvincible) return;
         playerData.hp -= damage;
     }
 
