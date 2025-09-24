@@ -1,10 +1,11 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
-public class Door : MonoBehaviour
+public class SecretRoom1Camera : MonoBehaviour
 {
-    public Transform rightRoom;
-    public Transform leftRoom;
-    public CameraController cam;
+    public CinemachineCamera leftCamera;
+    public CinemachineCamera rightCamera;
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -12,11 +13,13 @@ public class Door : MonoBehaviour
             // From left of collider to right
             if (collision.transform.position.x > transform.position.x)
             {
-                cam.MoveToNewRoom(rightRoom);
+                rightCamera.Priority = 10;
+                leftCamera.Priority = 5;
             }
             else
             {
-                cam.MoveToNewRoom(leftRoom);
+                leftCamera.Priority = 10;
+                rightCamera.Priority = 5;
             }
         }
         
