@@ -14,10 +14,24 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         input = GetComponent<PlayerInput>();
+        Time.timeScale = 0.25f;
     }
 
     public void FixedUpdate()
     {
+
+        if (!playerData.isDashing)
+        {
+            // For fast movements like when falling / knockbacked
+            if (Mathf.Abs(rb.linearVelocityX) > 20 || Mathf.Abs(rb.linearVelocityY) > 20)
+            {
+                rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            }
+            else
+            {
+                rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            }
+        }
 
         if (playerData.isDashing)
         {
@@ -42,36 +56,6 @@ public class PlayerMovement : MonoBehaviour
         else if (playerData.isJumping && Mathf.Abs(rb.linearVelocityY) < playerData.jumpHangTimeThreshold)
             rb.gravityScale = playerData.jumpHangGravityScale;
 
-        if (isInStartDashAnimation)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
-    }
-
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            playerData.isJumping = false;
-            playerData.isGrounded = true;
-        }
-        else if (collision.gameObject.CompareTag("Platform"))
-        {
-            playerData.isJumping = false;
-            playerData.isGrounded = true;
-        }
-    }
-
-    public void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            playerData.isGrounded = false;
-        }
-        else if (collision.gameObject.CompareTag("Platform"))
-        {
-            playerData.isGrounded = false;
-        }
     }
 
     public void HandleMovement()
@@ -80,7 +64,6 @@ public class PlayerMovement : MonoBehaviour
 
         HandleFaceDirection();
         HandleJump();
-        HandleDash();
 
         if (input.wasdInputVector.WasReleasedThisFrame())
         {
@@ -98,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         if (input.jumpInput.ReadValue<float>() >= 1)
             playerData.isJumping = true;
 
+        HandleDash();
         HandleAnimations();
     }
     public void HandleAnimations()
@@ -145,27 +129,42 @@ public class PlayerMovement : MonoBehaviour
             playerData.isInvincible = true;
             playerData.dashCooldownTimer = playerData.dashCooldown;
             animator.SetTrigger("Dash");
-            Debug.Log("Teleporting");
-
-            isInStartDashAnimation = true;
+            //rb.linearVelocity = Vector2.zero;
+            rb.linearVelocity = moveDirectionVector * Vector2.right * playerData.dashForce;
+            StartCoroutine(StopTeleportDash());
         }
-    }
-
-    public void Dash()
-    {
-        isInStartDashAnimation = false;
-        rb.linearVelocity = moveDirectionVector * Vector2.right * playerData.dashForce;
-        StartCoroutine(StopTeleportDash());
     }
 
     public IEnumerator StopTeleportDash()
     {
         yield return new WaitForSeconds(playerData.dashDuration);
         animator.SetTrigger("DashEnd");
-        Debug.Log("Teleported");
         rb.linearVelocity = Vector2.zero; //new Vector2(0, rb.linearVelocityY);
         playerData.isMovementDisabled = false;
         playerData.isDashing = false;
         playerData.isInvincible = false;
     }
+    //public void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (
+    //        collision.gameObject.CompareTag("Ground") ||
+    //        collision.gameObject.CompareTag("Platform")
+    //    )
+    //    {
+    //        playerData.isJumping = false;
+    //        playerData.isGrounded = true;
+    //    }
+    //}
+
+    //public void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (
+    //        collision.gameObject.CompareTag("Ground") ||
+    //        collision.gameObject.CompareTag("Platform")
+    //    )
+    //    {
+    //        playerData.isGrounded = false;
+    //    }
+    //}
+
 }

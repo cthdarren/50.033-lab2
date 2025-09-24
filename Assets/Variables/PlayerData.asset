@@ -16,16 +16,16 @@ MonoBehaviour:
   maxSpeed: 0
   jumpHangTimeThreshold: 0
   jumpHangGravityScale: 1
-  fallingGravityScale: 6
+  fallingGravityScale: 5
   defaultGravityScale: 3
   dashDuration: 0.2
   dashDelay: 0
-  dashCooldown: 0.9
-  dashCooldownTimer: -0.559999
-  dashForce: 33
+  dashCooldown: 0.1
+  dashCooldownTimer: -88.51716
+  dashForce: 30
   jumpForce: 15
-  maxFallSpeed: 50
-  hp: 10
+  maxFallSpeed: 30
+  hp: -620
   damage: 1
   isJumping: 0
   isDashing: 0
