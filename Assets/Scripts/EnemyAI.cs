@@ -3,6 +3,8 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     public EnemyData enemyData;
+
+    public GameObject attackHitbox;
     private Rigidbody2D rb;
     private Animator animator;
     private Transform playerTransform;
@@ -109,6 +111,16 @@ public class EnemyAI : MonoBehaviour
                 currentState = AIState.Chasing;
             }
         }
+    }
+
+    public void EnableAttackHitbox()
+    {
+        attackHitbox.SetActive(true);
+    }
+
+    public void DisableAttackHitbox()
+    {
+        attackHitbox.SetActive(false);
     }
 
     public void TakeDamage(float damage)
