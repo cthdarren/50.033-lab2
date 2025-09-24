@@ -5,9 +5,12 @@ public class BouncyMushroom : MonoBehaviour
     public AudioClip bounceSound;
     private AudioSource audioSource;
 
+    private Animator animator;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -26,6 +29,12 @@ public class BouncyMushroom : MonoBehaviour
                     audioSource.PlayOneShot(bounceSound);
 
                 }
+
+                if (animator != null)
+                {
+                    animator.SetTrigger("Bounce");
+                }
+
                 return;
             }
         }
