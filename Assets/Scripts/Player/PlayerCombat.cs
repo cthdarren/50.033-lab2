@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -6,6 +8,7 @@ public class PlayerCombat : MonoBehaviour
     public Collider2D attackHitbox;
     public PlayerData playerData;
     public PlayerInput input;
+    public GameEvent attackEvent;
 
     public void HandleCombat()
     {
@@ -36,9 +39,19 @@ public class PlayerCombat : MonoBehaviour
 
     public void Attack()
     {
-        if (!playerData.isDashing)
-            animator.SetTrigger("Attack");
+        if (playerData.isDashing) return;
+        animator.SetTrigger("Attack");
+        attackEvent.Raise();
+        attackHitbox.enabled = true;
+        StartCoroutine(WaitForAttackHitboxWindow());
     }
+
+    public IEnumerator WaitForAttackHitboxWindow()
+    {
+        yield return new WaitForSeconds(0.1f);
+        attackHitbox.enabled = false;
+    }
+
 
     public void OnCollisionEnter2D(Collision2D collision)
     {

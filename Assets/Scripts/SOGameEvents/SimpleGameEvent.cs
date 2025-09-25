@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleGameEventListener : GameEventListener<Object>
+[CreateAssetMenu]
+public class SimpleGameEvent : GameEvent
 {
-
 }
