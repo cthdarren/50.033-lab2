@@ -93,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleFaceDirection()
     {
+        if (animator.GetBool("IsAttacking")) return;
         Vector3 vector3scale = this.transform.localScale;
         if (Mathf.Abs(moveDirectionVector) >= 1)
             this.transform.localScale = new Vector3(moveDirectionVector * Mathf.Abs(vector3scale.x), vector3scale.y, vector3scale.z);

@@ -28,7 +28,8 @@ public class PlayerCombat : MonoBehaviour
 
     public void Attack()
     {
-        animator.SetTrigger("Attack");
+        if (!playerData.isDashing)
+            animator.SetTrigger("Attack");
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
