@@ -1,9 +1,11 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SFXLibrary: MonoBehaviour
 {
-    public SoundEffectGroup[] soundEffectGroups;
+    [SerializeField] private SoundEffectGroup[] soundEffectGroups;
     private Dictionary<string, List<AudioClip>> soundMap;
 
     private void Awake()
@@ -15,9 +17,9 @@ public class SFXLibrary: MonoBehaviour
     {
         soundMap = new Dictionary<string, List<AudioClip>>();
 
-        foreach (SoundEffectGroup group in soundEffectGroups)
+        foreach (SoundEffectGroup soundEffectGroup in soundEffectGroups)
         {
-            soundMap[group.name] = group.audioClips;
+            soundMap[soundEffectGroup.name] = soundEffectGroup.audioClips;
         }
     }
 
@@ -28,7 +30,7 @@ public class SFXLibrary: MonoBehaviour
             List<AudioClip> audioClips = soundMap[name];
             if (audioClips.Count > 1)
             {
-                return audioClips[Random.Range(0, audioClips.Count)];
+                return audioClips[UnityEngine.Random.Range(0, audioClips.Count)];
             }
             return audioClips[0];
         }
@@ -37,7 +39,7 @@ public class SFXLibrary: MonoBehaviour
 
 }
 
-[SerializeField]
+[Serializable]
 public struct SoundEffectGroup
 {
     public string name;

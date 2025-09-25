@@ -1050,7 +1050,7 @@ Transform:
   m_GameObject: {fileID: 301924010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9890854, y: 3.50053, z: -10}
+  m_LocalPosition: {x: 1.2649531, y: 3.50063, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1094,6 +1094,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c998aa1659bdc7844a05eac28627b31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SFXLibrary
+  soundEffectGroups:
+  - name: attackSounds
+    audioClips:
+    - {fileID: 8300000, guid: 10bf5c800e3a3a74d955872de6439f39, type: 3}
 --- !u!4 &327707376
 Transform:
   m_ObjectHideFlags: 0
