@@ -152,7 +152,14 @@ public class EnemyAI : MonoBehaviour
         animator.SetTrigger("Death");
 
         rb.linearVelocity = Vector2.zero;
-        GetComponent<Collider2D>().enabled = false;
-        this.enabled = false;
+        // GetComponent<Collider2D>().enabled = false;
+        // this.enabled = false;
+        StartCoroutine(DisableAfterDeath());
+    }
+
+    private System.Collections.IEnumerator DisableAfterDeath()
+    {
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 }
