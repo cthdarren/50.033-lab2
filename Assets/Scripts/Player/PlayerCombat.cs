@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
@@ -9,6 +8,7 @@ public class PlayerCombat : MonoBehaviour
     public PlayerData playerData;
     public PlayerInput input;
     public GameEvent attackEvent;
+    [SerializeField] private HitStop hitStop;
 
     public void HandleCombat()
     {
@@ -42,22 +42,29 @@ public class PlayerCombat : MonoBehaviour
         if (playerData.isDashing) return;
         animator.SetTrigger("Attack");
         attackEvent.Raise();
-        attackHitbox.enabled = true;
         StartCoroutine(WaitForAttackHitboxWindow());
     }
 
     public IEnumerator WaitForAttackHitboxWindow()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(playerData.attackHitboxDelay);
+        attackHitbox.enabled = true;
+        yield return new WaitForSeconds(playerData.attackHitboxDuration);
         attackHitbox.enabled = false;
     }
 
-
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.collider.CompareTag("Enemy"))
+        if (!attackHitbox.enabled) return; 
+
+        if (other.CompareTag("Enemy"))
         {
-            // EnemyPrefab.TakeDamage();
+            EnemyAI enemy = other.GetComponent<EnemyAI>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(playerData.damage);
+                hitStop.Stop(playerData.hitStopDuration);
+            }
         }
     }
 }

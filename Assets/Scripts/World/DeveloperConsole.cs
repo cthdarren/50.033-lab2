@@ -6,6 +6,10 @@ public class DeveloperConsole : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Time.timeScale = devConsole.timeScale;
+        if (!devConsole.cheatsOn) return;
+        if (devConsole.overrideTime)
+        {
+            Time.timeScale = devConsole.timeScale;
+        }
     }
 }

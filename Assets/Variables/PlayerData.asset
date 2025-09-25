@@ -21,12 +21,15 @@ MonoBehaviour:
   dashDuration: 0.2
   dashDelay: 0
   dashCooldown: 0.1
-  dashCooldownTimer: -88.51716
+  dashCooldownTimer: -1.8399984
   dashForce: 30
   jumpForce: 15
   maxFallSpeed: 30
-  hp: -620
-  damage: 1
+  hp: -650
+  damage: 10
+  hitStopDuration: 0.06
+  attackHitboxDelay: 0.05
+  attackHitboxDuration: 0.1
   isJumping: 0
   isDashing: 0
   isGrounded: 1

@@ -584,6 +584,50 @@ MonoBehaviour:
   startpos: 0
   cam: {fileID: 301924010}
   parallaxEffect: 0
+--- !u!1 &249670387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 249670389}
+  - component: {fileID: 249670388}
+  m_Layer: 0
+  m_Name: HitStop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &249670388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249670387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11094706c3536b844be4d00d56b3a288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStop
+--- !u!4 &249670389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249670387}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.0295573, y: 0.46709746, z: 0}
+  m_LocalScale: {x: 0.24999997, y: 0.24999997, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1895536814}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &260781852
 GameObject:
   m_ObjectHideFlags: 0
@@ -21009,6 +21053,7 @@ Transform:
   - {fileID: 1171186409}
   - {fileID: 758763151}
   - {fileID: 2126809262}
+  - {fileID: 249670389}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1895536815
@@ -21183,6 +21228,7 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: e006dd96b54a75445a014fb503d330f6, type: 2}
   input: {fileID: 1895536816}
   attackEvent: {fileID: 11400000, guid: 2545f81f4a2faea4f8a3d8f2391b9558, type: 2}
+  hitStop: {fileID: 249670388}
 --- !u!1 &1918657389
 GameObject:
   m_ObjectHideFlags: 0
@@ -21371,7 +21417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2126809262}
   - component: {fileID: 2126809263}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21400,7 +21446,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126809261}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}

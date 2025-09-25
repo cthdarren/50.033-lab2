@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         input = GetComponent<PlayerInput>();
-        Time.timeScale = 0.25f;
     }
 
     public void FixedUpdate()

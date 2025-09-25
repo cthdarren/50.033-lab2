@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HitStop : MonoBehaviour
 {
-    private bool isWaiting;
+    private bool isWaiting = false;
     public void Stop(float duration_seconds)
     {
         if (isWaiting) return;
