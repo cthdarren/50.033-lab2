@@ -116,11 +116,13 @@ public class EnemyAI : MonoBehaviour
     public void EnableAttackHitbox()
     {
         attackHitbox.SetActive(true);
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void DisableAttackHitbox()
     {
         attackHitbox.SetActive(false);
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void TakeDamage(float damage)
