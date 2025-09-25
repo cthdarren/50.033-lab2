@@ -9,10 +9,18 @@ public class PlayerCombat : MonoBehaviour
 
     public void HandleCombat()
     {
+        if (isDead())
+        {
+            // Play death animation + ui screen
+        }
         if (input.attackInput.WasPressedThisFrame())
         {
             Attack();
         }
+    }
+    public bool isDead()
+    {
+        return playerData.hp < 0;
     }
 
     public void TakeDamage(float damage)

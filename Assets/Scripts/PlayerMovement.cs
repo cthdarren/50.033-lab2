@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
         if (!playerData.isDashing)
         {
             // For fast movements like when falling / knockbacked
-            if (Mathf.Abs(rb.linearVelocityX) > 20 || Mathf.Abs(rb.linearVelocityY) > 20)
+            if (Mathf.Abs(rb.linearVelocityX) > 10 || Mathf.Abs(rb.linearVelocityY) > 10)
             {
                 rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             }
@@ -71,12 +71,15 @@ public class PlayerMovement : MonoBehaviour
         }
         if (input.wasdInputVector.IsPressed())
         {
-
             // W+A = 0.707 x 
             moveDirectionVector = Mathf.Round(input.wasdInputVector.ReadValue<Vector2>().x);
 
             //if (input.wasdInputVector.ReadValue<Vector2>().y <= 0)
             rb.linearVelocity = new Vector2(playerData.targetSpeed * moveDirectionVector, rb.linearVelocityY);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
         }
         if (input.jumpInput.ReadValue<float>() >= 1)
             playerData.isJumping = true;
