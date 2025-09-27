@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy Data
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   health: 100
-  moveSpeed: 3
+  moveSpeed: 5
   attackDamage: 10
   attackRange: 1.5
   attackCooldown: 2
