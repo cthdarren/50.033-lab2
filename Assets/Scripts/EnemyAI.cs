@@ -137,12 +137,7 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (currentStateInfo.shortNameHash != attackStateHash)
-        {
-            animator.SetTrigger("Hurt");
-        }
+        animator.SetTrigger("Hurt");
 
     }
 
