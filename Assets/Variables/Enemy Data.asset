@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: Enemy Data
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   health: 100
-  moveSpeed: 5
+  moveSpeed: 4
   attackDamage: 10
   attackRange: 1.5
   attackCooldown: 2
   detectionRange: 10
+  dashSpeed: 25
+  dashDuration: 0.2
+  dashCooldown: 5
+  minDashRange: 4
+  maxDashRange: 12

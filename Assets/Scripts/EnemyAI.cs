@@ -1,17 +1,23 @@
 using UnityEngine;
+using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
     public EnemyData enemyData;
 
     public GameObject attackHitbox;
+
+    public TrailRenderer dashTrail;
     private Rigidbody2D rb;
     private Animator animator;
     private Transform playerTransform;
-    private enum AIState { Idle, Chasing, Attacking }
+    private enum AIState { Idle, Chasing, Attacking, Dashing }
     private AIState currentState;
+
+    private bool isAttacking = false;
     private float currentHealth;
     private float attackTimer;
+    private float dashTimer;
     private bool isDead = false;
     private int attackStateHash;
     private int idleStateHash;
@@ -20,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        dashTrail = GetComponent<TrailRenderer>();
 
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -36,6 +43,9 @@ public class EnemyAI : MonoBehaviour
     {
         if (isDead) return;
 
+        if (attackTimer > 0) attackTimer -= Time.deltaTime;
+        if (dashTimer > 0) dashTimer -= Time.deltaTime;
+
         switch (currentState)
         {
             case AIState.Idle:
@@ -46,6 +56,8 @@ public class EnemyAI : MonoBehaviour
                 break;
             case AIState.Attacking:
                 AttackState();
+                break;
+            case AIState.Dashing:
                 break;
         }
 
@@ -68,15 +80,28 @@ public class EnemyAI : MonoBehaviour
 
     private void ChaseState()
     {
-        animator.SetBool("isWalking", true);
+        if (dashTrail != null && dashTrail.emitting)
+        {
+            StopDashTrail();
+        }
 
-        if (Vector2.Distance(transform.position, playerTransform.position) < enemyData.attackRange)
+
+        animator.SetBool("isWalking", true);
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+
+        if (distanceToPlayer < enemyData.attackRange)
         {
             currentState = AIState.Attacking;
             return;
         }
 
-        if (Vector2.Distance(transform.position, playerTransform.position) > enemyData.detectionRange)
+        if (dashTimer <= 0 && distanceToPlayer > enemyData.minDashRange && distanceToPlayer < enemyData.maxDashRange)
+        {
+            InitiateDash();
+            return;
+        }
+
+        if (distanceToPlayer > enemyData.detectionRange)
         {
             currentState = AIState.Idle;
             return;
@@ -93,24 +118,74 @@ public class EnemyAI : MonoBehaviour
 
     private void AttackState()
     {
-        rb.linearVelocity = Vector2.zero;
-        animator.SetBool("isWalking", false);
-
-        if (attackTimer <= 0)
+        if (!isAttacking)
         {
-            animator.SetTrigger("Attack");
-            attackTimer = enemyData.attackCooldown;
-        }
-
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (stateInfo.shortNameHash == idleStateHash)
-        {
+            rb.linearVelocity = Vector2.zero;
+            animator.SetBool("isWalking", false);
             if (Vector2.Distance(transform.position, playerTransform.position) > enemyData.attackRange)
             {
                 currentState = AIState.Chasing;
+                return;
             }
+
+            if (attackTimer <= 0)
+            {
+                animator.SetTrigger("Attack");
+                attackTimer = enemyData.attackCooldown;
+            }
+
         }
+
+        // AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // if (stateInfo.shortNameHash == idleStateHash)
+        // {
+        //     if (Vector2.Distance(transform.position, playerTransform.position) > enemyData.attackRange)
+        //     {
+        //         currentState = AIState.Chasing;
+        //     }
+        // }
+    }
+
+    private void InitiateDash()
+    {
+        currentState = AIState.Dashing;
+        animator.SetTrigger("Dash");
+        StartCoroutine(DashCoroutine());
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        Vector2 dashDirection = (playerTransform.position - transform.position).normalized;
+        if (dashDirection.x > 0)
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        else if (dashDirection.x < 0)
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
+        float elapsedTime = 0f;
+        while (elapsedTime < enemyData.dashDuration)
+        {
+            rb.linearVelocity = new Vector2(dashDirection.x * enemyData.dashSpeed, rb.linearVelocity.y);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.linearVelocity = Vector2.zero;
+        dashTimer = enemyData.dashCooldown;
+        StopDashTrail();
+        currentState = AIState.Chasing;
+
+    }
+
+    public void AttackStart()
+    {
+        isAttacking = true;
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    public void AttackEnd()
+    {
+        isAttacking = false;
     }
 
     public void EnableAttackHitbox()
@@ -125,9 +200,30 @@ public class EnemyAI : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
     }
 
+    public void StartDashTrail()
+    {
+        if (dashTrail != null) dashTrail.emitting = true;
+    }
+
+    public void StopDashTrail()
+    {
+        if (dashTrail != null)
+        {
+            dashTrail.emitting = false;
+            dashTrail.Clear();
+        }
+    }
+
     public void TakeDamage(float damage)
     {
         if (isDead) return;
+
+        if (currentState == AIState.Dashing)
+        {
+            StopCoroutine(DashCoroutine());
+            currentState = AIState.Chasing;
+        }
+        StopDashTrail();
 
         currentHealth -= damage;
 
