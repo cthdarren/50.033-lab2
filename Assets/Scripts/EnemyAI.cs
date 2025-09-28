@@ -14,6 +14,8 @@ public class EnemyAI : MonoBehaviour
     private enum AIState { Idle, Chasing, Attacking, Dashing }
     private AIState currentState;
 
+    private Coroutine dashCoroutine;
+
     private bool isAttacking = false;
     private float currentHealth;
     private float attackTimer;
@@ -59,11 +61,6 @@ public class EnemyAI : MonoBehaviour
                 break;
             case AIState.Dashing:
                 break;
-        }
-
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
         }
     }
 
@@ -136,6 +133,24 @@ public class EnemyAI : MonoBehaviour
 
         }
 
+        else
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.shortNameHash == idleStateHash && stateInfo.normalizedTime >= 0.95f)
+            {
+                float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+                if (distanceToPlayer > enemyData.attackRange)
+                {
+                    currentState = AIState.Chasing;
+                }
+                else if (attackTimer <= 0)
+                {
+                    animator.SetTrigger("Attack");
+                    attackTimer = enemyData.attackCooldown;
+                }
+            }
+        }
+
         // AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
         // if (stateInfo.shortNameHash == idleStateHash)
@@ -151,7 +166,7 @@ public class EnemyAI : MonoBehaviour
     {
         currentState = AIState.Dashing;
         animator.SetTrigger("Dash");
-        StartCoroutine(DashCoroutine());
+        dashCoroutine = StartCoroutine(DashCoroutine());
     }
 
     private IEnumerator DashCoroutine()
@@ -220,7 +235,8 @@ public class EnemyAI : MonoBehaviour
 
         if (currentState == AIState.Dashing)
         {
-            StopCoroutine(DashCoroutine());
+            StopCoroutine(dashCoroutine);
+            dashCoroutine = null;
             currentState = AIState.Chasing;
         }
         StopDashTrail();
