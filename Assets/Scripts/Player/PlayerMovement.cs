@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq.Expressions;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -18,19 +17,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-
-        if (!playerData.isDashing)
-        {
-            // For fast movements like when falling / knockbacked
-            if (Mathf.Abs(rb.linearVelocityX) > 10 || Mathf.Abs(rb.linearVelocityY) > 10)
-            {
-                rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            }
-            else
-            {
-                rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-            }
-        }
 
         if (playerData.isDashing)
         {

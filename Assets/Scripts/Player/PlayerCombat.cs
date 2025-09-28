@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -42,29 +43,32 @@ public class PlayerCombat : MonoBehaviour
         if (playerData.isDashing) return;
         animator.SetTrigger("Attack");
         attackEvent.Raise();
-        StartCoroutine(WaitForAttackHitboxWindow());
     }
 
-    public IEnumerator WaitForAttackHitboxWindow()
+    public void EnableAttackHitboxWindow()
     {
-        yield return new WaitForSeconds(playerData.attackHitboxDelay);
         attackHitbox.enabled = true;
-        yield return new WaitForSeconds(playerData.attackHitboxDuration);
-        attackHitbox.enabled = false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!attackHitbox.enabled) return; 
-
-        if (other.CompareTag("Enemy"))
+        var results = new Collider2D[10];
+        int count = attackHitbox.Overlap(ContactFilter2D.noFilter, results);
+        if (count > 0)
         {
-            EnemyAI enemy = other.GetComponent<EnemyAI>();
-            if (enemy != null)
+            foreach (Collider2D collider in results)
             {
-                enemy.TakeDamage(playerData.damage);
-                hitStop.Stop(playerData.hitStopDuration);
+                if (collider && collider.CompareTag("Enemy"))
+                {
+                    EnemyAI enemy = collider.GetComponent<EnemyAI>();
+                    if (enemy != null)
+                    {
+                        hitStop.Stop(playerData.hitStopDuration);
+                        enemy.TakeDamage(playerData.damage);
+                    }
+                }
             }
         }
+    }
+
+    public void DisableAttackHitBoxWindow()
+    {
+        attackHitbox.enabled = false;
     }
 }
