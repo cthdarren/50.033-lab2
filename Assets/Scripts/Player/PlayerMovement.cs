@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     public PlayerInput input;
     public Rigidbody2D rb;
     public float moveDirectionVector = 1;
-    private bool isInStartDashAnimation;
 
     void Start()
     {
@@ -45,7 +44,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleMovement()
     {
-        if (playerData.isMovementDisabled) return;
+        if (playerData.isMovementDisabled)
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
+            return;
+        }
 
         HandleFaceDirection();
         HandleJump();

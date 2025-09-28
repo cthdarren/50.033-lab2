@@ -16,3 +16,4 @@ MonoBehaviour:
   overrideTime: 0
   timeScale: 1
   targetFrameRate: 100
+  npcInteractableRange: 2
