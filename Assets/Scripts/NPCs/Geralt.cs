@@ -4,6 +4,12 @@ public class Geralt : NPC, ITalkable
 {
     [SerializeField] private DialogueText dialogueText;
     [SerializeField] private DialogueController controller;
+    private bool isFirstLine = true;
+    private AudioSource audioSource;
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     public override void Interact()
     {
         Talk(dialogueText);
@@ -11,9 +17,16 @@ public class Geralt : NPC, ITalkable
 
     public void Talk(DialogueText dialogueText)
     {
-        playerData.isMovementDisabled = true;
+        if (isFirstLine)
+        {
+            // playsound
+            audioSource.Play();
+            isFirstLine = false;
+        } 
         bool conversationEnded =  controller.DisplayNextParagraph(dialogueText);
-        if (conversationEnded) playerData.isMovementDisabled = false;
-
+        if (conversationEnded)
+        {
+            isFirstLine = true;
+        }
     }
 }

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb223b9078b9524fa807eee020f59d2, type: 3}
+  m_Script: {fileID: 11500000, guid: de0369351d6cc3e48aecef4906d5fb8f, type: 3}
   m_Name: PlayerAttack
-  m_EditorClassIdentifier: Assembly-CSharp::SimpleGameEvent
+  m_EditorClassIdentifier: Assembly-CSharp::GameEvent

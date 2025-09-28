@@ -44,11 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleMovement()
     {
-        if (playerData.isMovementDisabled)
-        {
-            rb.linearVelocity = new Vector2(0, rb.linearVelocityY);
-            return;
-        }
+        if (playerData.isMovementDisabled) return;
 
         HandleFaceDirection();
         HandleJump();

@@ -1,8 +1,11 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using static UnityEditorInternal.VersionControl.ListControl;
 
 public class EnemyAI : MonoBehaviour
 {
+    [SerializeField] GameEvent onAggroPlayer;
+    [SerializeField] GameEvent onDeaggroPlayer;
     public EnemyData enemyData;
 
     public GameObject attackHitbox;
@@ -13,6 +16,7 @@ public class EnemyAI : MonoBehaviour
     private Transform playerTransform;
     private enum AIState { Idle, Chasing, Attacking, Dashing }
     private AIState currentState;
+    private AIState lastState;
 
     private Coroutine dashCoroutine;
 
@@ -22,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     private float dashTimer;
     private bool isDead = false;
     private int attackStateHash;
+    private bool isAggroed = false;
     private int idleStateHash;
 
     void Start()
@@ -48,6 +53,21 @@ public class EnemyAI : MonoBehaviour
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
         if (dashTimer > 0) dashTimer -= Time.deltaTime;
 
+        if (lastState != currentState)
+        {
+            if (currentState != AIState.Idle && !isAggroed)
+            {
+                isAggroed = true;
+                onAggroPlayer.Raise();
+            }
+            else if (currentState == AIState.Idle && isAggroed)
+            {
+                isAggroed = false;
+                onDeaggroPlayer.Raise();
+            }
+
+            lastState = currentState;
+        }
         switch (currentState)
         {
             case AIState.Idle:
@@ -257,6 +277,7 @@ public class EnemyAI : MonoBehaviour
     {
         isDead = true;
         animator.SetTrigger("Death");
+        onDeaggroPlayer.Raise();
 
         rb.linearVelocity = Vector2.zero;
         // GetComponent<Collider2D>().enabled = false;

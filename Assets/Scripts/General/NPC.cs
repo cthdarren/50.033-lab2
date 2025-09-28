@@ -5,8 +5,7 @@ using UnityEngine.InputSystem;
 public abstract class NPC : MonoBehaviour, IInteractable
 {
     [SerializeField] private SpriteRenderer _interactSprite;
-    private Transform _playerTransform;
-    public PlayerData playerData;
+    [SerializeField] private Transform _playerTransform;
     public DevConsole devConsole;
 
     void Start()

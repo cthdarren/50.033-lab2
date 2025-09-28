@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
+[CreateAssetMenu]
 public class GameEvent : ScriptableObject
 {
     private readonly List<GameEventListener> eventListeners =

@@ -32,4 +32,5 @@ public class PlayerData: ScriptableObject
     public bool isGrounded = true;
     public bool isInvincible = false;
     public bool isMovementDisabled = false;
+    public bool isAggroed = false;
 }
